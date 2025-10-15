@@ -60,6 +60,8 @@ def delete_endpoint(endpoint_name: str):
     
     try:
         session.delete_endpoint(endpoint_name)
+        session.delete_endpoint_config(endpoint_name)
+        session.delete_model(endpoint_name)
         print(f"Endpoint '{endpoint_name}' deleted successfully!")
     except Exception as e:
         print(f"Error deleting endpoint: {e}")    
