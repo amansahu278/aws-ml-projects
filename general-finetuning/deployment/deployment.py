@@ -11,7 +11,7 @@ role = sagemaker.get_execution_role()
 def deploy_model(
     model_data: str,
     endpoint_name: str = None,
-    instance_type: str = "ml.g4dn.xlarge",
+    instance_type: str = "ml.m5.large",
     instance_count: int = 1,
 ):
     
@@ -115,7 +115,7 @@ def parse_args():
     deploy_parser.add_argument(
         '--instance-type',
         type=str,
-        default='ml.g4dn.xlarge',
+        default='ml.m5.large',
         help='Instance type for the endpoint'
     )
     deploy_parser.add_argument(
