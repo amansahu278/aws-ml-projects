@@ -17,7 +17,7 @@ code_location = f"s3://{bucket_name}/{project_prefix}/code"
 
 def create_training_job(
     config_path: str = "configs/train.yaml",
-    instance_type: str = "ml.m5.large",
+    instance_type: str = "ml.m5.xlarge",
     instance_count: int = 1,
     job_name: str = None,
     model_name: str = None,
@@ -117,7 +117,7 @@ def create_training_job(
 def create_evaluation_job(
     checkpoint_path: str,
     config_path: str = "configs/train.yaml",
-    instance_type: str = "ml.m5.large",
+    instance_type: str = "ml.m5.xlarge",
     job_name: str = None,
     eval_subset: int = None,
 ):
@@ -229,11 +229,11 @@ def parse_args():
     infra = parser.add_argument_group('Infrastructure')
     infra.add_argument("--config-path", type=str, default="configs/train.yaml",
                        help="Path to training config file")
-    infra.add_argument("--instance-type", type=str, default="ml.m5.large",
+    infra.add_argument("--instance-type", type=str, default="ml.m5.xlarge",
                        help="Instance type for training")
     infra.add_argument("--instance-count", type=int, default=1,
                        help="Number of training instances")
-    infra.add_argument("--eval-instance-type", type=str, default="ml.m5.large",
+    infra.add_argument("--eval-instance-type", type=str, default="ml.m5.xlarge",
                        help="Instance type for evaluation")
     infra.add_argument("--job-name", type=str, default=None,
                        help="Custom job name prefix")
