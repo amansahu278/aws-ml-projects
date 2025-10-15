@@ -17,7 +17,7 @@ code_location = f"s3://{bucket_name}/{project_prefix}/code"
 
 def create_training_job(
     config_path: str = "configs/train.yaml",
-    instance_type: str = "ml.t2.medium",
+    instance_type: str = "ml.g4dn.xlarge",
     instance_count: int = 1,
     job_name: str = None,
     model_name: str = None,
@@ -96,6 +96,10 @@ def create_training_job(
         code_location=code_location,
         base_job_name=job_name or "general-finetuning",
         sagemaker_session=session,
+        # Use spot instances for 70% cost savings
+        use_spot_instances=True,
+        max_wait=3600,  # Max 1 hour wait for spot
+        max_run=1800,   # Max 30 min training time
     )
     
     print(f"Starting training job...")
@@ -113,7 +117,7 @@ def create_training_job(
 def create_evaluation_job(
     checkpoint_path: str,
     config_path: str = "configs/train.yaml",
-    instance_type: str = "ml.m5.xlarge",
+    instance_type: str = "ml.g4dn.xlarge",
     job_name: str = None,
     eval_subset: int = None,
 ):
@@ -148,6 +152,10 @@ def create_evaluation_job(
         code_location=code_location,
         base_job_name=job_name or "model-evaluation",
         sagemaker_session=session,
+        # Use spot instances for evaluation too
+        use_spot_instances=True,
+        max_wait=1800,  # Max 30 min wait for spot
+        max_run=600,    # Max 10 min evaluation time
     )
     
     print(f"Starting evaluation job...")
@@ -221,12 +229,12 @@ def parse_args():
     infra = parser.add_argument_group('Infrastructure')
     infra.add_argument("--config-path", type=str, default="configs/train.yaml",
                        help="Path to training config file")
-    infra.add_argument("--instance-type", type=str, default="ml.t2.medium",
+    infra.add_argument("--instance-type", type=str, default="ml.g4dn.xlarge",
                        help="Instance type for training")
     infra.add_argument("--instance-count", type=int, default=1,
                        help="Number of training instances")
-    infra.add_argument("--eval-instance-type", type=str, default="ml.t2.medium",
-                       help="Instance type for evaluation (CPU is fine)")
+    infra.add_argument("--eval-instance-type", type=str, default="ml.g4dn.xlarge",
+                       help="Instance type for evaluation")
     infra.add_argument("--job-name", type=str, default=None,
                        help="Custom job name prefix")
     
